@@ -1,0 +1,86 @@
+﻿@{Layout = null;}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.clearButton').click(function () {
+                $(".checkbox").prop("checked", false);
+            });
+            $(".saveButton").click(function () {
+                $("#Message").html("Please wait while saving answers");
+                var answerList = [];
+                //Seçilen Cevaplar Alınıyor
+                var chk = $(".checkbox");
+                for (var i = 0; i < chk.length; i++) {
+                    if (chk[i].checked) {
+                        var Answer = {
+                            QuestionId: chk[i].id.split("-")[0],
+                            ProductId: chk[i].id.split("-")[1]
+                        };
+                        answerList.push(Answer);
+                    }
+                }
+                $.ajax({
+                    url: '../api/Answer/PostAnswer',
+                    cache: false,
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(answerList),
+                    dataType: "json",
+                    success: function (data) {
+                        $("#Message").html("Answers are added succesfully. </br> Please click See Results button to check results.");
+                        console.log('Başarılı bir şekilde eklendi');
+                        $('.clearButton').click();
+                    }
+                }).fail(
+                function (xhr, textStatus, err) {
+                    $("#Message").html("Error" + err);
+                    console.log("Error:" + err);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div style="float:left;">
+        <h2>Survey Questions</h2>
+        <table class="stdtable">
+            <tr>
+                <td>No</td>
+                <td>Questions</td>
+                <td>Product 1</td>
+                <td>Product 2</td>
+                <td>Product 3</td>
+                <td>Product 4</td>
+            </tr>
+            @{int i = 1;}
+            @foreach (var question in @ViewBag.question)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>  @question.Name </td>
+                    @foreach (var product in @ViewBag.product)
+                    {
+                        <td>  <input type="checkbox" id="@question.Id-@product.Id" class="checkbox" /></td>
+                    }
+                </tr>
+                    i++;
+            }
+        </table>
+    </div>
+    <div style="float:left;">
+        <br /><br /><br /><br />
+        <input type="submit" value="Clear Form" class="clearButton button" />
+        <input type="submit" value="Post Answers" class="saveButton button" />
+        @Html.ActionLink("See Results", "Results", "Survey")
+        <br /><br />
+        <span id="Message">  </span>
+    </div>
+
+</body>
+</html>

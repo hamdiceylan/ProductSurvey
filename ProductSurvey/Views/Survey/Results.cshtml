@@ -1,0 +1,48 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Results</title>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <div> 
+        <div style="float:left; display:block;">
+            <h2>Survey Results</h2>
+            <table class="stdtable">
+                <tr>
+                    <td>No</td>
+                    <td>Questions</td>
+                    <td>Product 1</td>
+                    <td>Product 2</td>
+                    <td>Product 3</td>
+                    <td>Product 4</td>
+                </tr>
+                @{int i = 1;}
+                @foreach (var result in @ViewBag.results)
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>  @result.Name </td>
+                        <td>  @result.Product1 </td>
+                        <td>  @result.Product2 </td>
+                        <td>  @result.Product3 </td>
+                        <td>  @result.Product4 </td>
+                    </tr>
+                    i++;
+                }
+            </table>
+        </div>
+        <div style="float:left;">
+            <br /><br /><br /><br />
+            @Html.ActionLink("Back", "Index", "Survey")
+        </div>
+    </div>
+</body>
+</html>
